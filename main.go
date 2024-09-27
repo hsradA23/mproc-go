@@ -44,11 +44,10 @@ func sep_thread(inp chan interface{}) {
 
 func pop(inp chan interface{}) int {
 	get_from := make(chan int)
+	defer close(get_from)
 	m := message.Pop{ReturnTo: get_from}
 	inp <- m
-	rec := <-get_from
-	close(get_from)
-	return rec
+	return <-get_from
 }
 
 func push(inp chan interface{}, val int) {
@@ -64,11 +63,10 @@ func set(inp chan interface{}, key int, val string){
 func get(inp chan interface{}, key int) string{
 
 	get_from := make(chan string)
+	defer close(get_from)
 	m := message.Get{Key: key, ReturnTo: get_from}
 	inp <- m
-	rec := <-get_from
-	close(get_from)
-	return rec
+	return <-get_from
 }
 
 
